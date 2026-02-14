@@ -11,7 +11,7 @@ resolution-markers = [
 ]
 
 [[package]]
-name = "algorithmics-training-strategies"
+name = "algorithmics-trading-strategies"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

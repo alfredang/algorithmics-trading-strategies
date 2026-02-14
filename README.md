@@ -26,8 +26,8 @@ This project uses `uv` for lightning-fast Python package management.
 
 ```bash
 # Clone the repository
-git clone https://github.com/alfredang/algorithmics-training-strategies.git
-cd algorithmics-training-strategies
+git clone https://github.com/alfredang/algorithmics-trading-strategies.git
+cd algorithmics-trading-strategies
 
 # Setup environment and install dependencies
 uv sync
