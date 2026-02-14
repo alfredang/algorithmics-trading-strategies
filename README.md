@@ -2,6 +2,8 @@
 
 An automated algorithmic trading dashboard built with **Streamlit**, **YFinance**, and **Gemini 2.0 AI**. This tool allows you to simulate various algorithmic trading strategies, compare them against a "Buy & Hold" benchmark, and receive AI-driven quant insights.
 
+![Automated Quant Trader Dashboard](algorithmic-trading.png)
+
 ## ✨ Features
 
 - **Automated Trading Simulation**: Choose a starting date and see how a fully automated bot would have performed using various technical strategies.
@@ -24,8 +26,8 @@ This project uses `uv` for lightning-fast Python package management.
 
 ```bash
 # Clone the repository
-git clone https://github.com/alfredang/algorithmic-trading.git
-cd algorithmic-trading
+git clone https://github.com/alfredang/algorithmics-traiing-strategies.git
+cd algorithmics-traiing-strategies
 
 # Setup environment and install dependencies
 uv sync
@@ -44,6 +46,26 @@ GEMINI_API_KEY=your_gemini_api_key_here
 ```bash
 uv run streamlit run app.py
 ```
+
+### Docker
+
+Pull and run the pre-built image from Docker Hub:
+
+```bash
+docker pull tertiaryinfotech/automated-quant-trader:latest
+docker run -p 8501:8501 -e GEMINI_API_KEY=your_key_here tertiaryinfotech/automated-quant-trader:latest
+```
+
+Or build locally:
+
+```bash
+docker build -t automated-quant-trader .
+docker run -p 8501:8501 --env-file .env automated-quant-trader
+```
+
+Then open http://localhost:8501 in your browser.
+
+> **Note:** The `GEMINI_API_KEY` is optional. If not provided, the app will skip AI insights and run normally.
 
 ## 🛠️ Tech Stack
 

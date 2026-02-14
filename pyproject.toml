@@ -1,5 +1,5 @@
 [project]
-name = "moving-avg-crossover-strategy"
+name = "algorithmics-traiing-strategies"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -21,6 +21,9 @@ dependencies = [
     "tqdm>=4.67.3",
     "yfinance>=1.1.0",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
 
 [build-system]
 requires = ["hatchling"]

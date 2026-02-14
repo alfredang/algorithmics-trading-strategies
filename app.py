@@ -6,9 +6,13 @@ from src.strategy import calculate_signals
 from src.backtest import run_backtest
 from src.metrics import calculate_metrics
 from src.utils import plot_interactive_results
-import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+
+try:
+    import google.generativeai as genai
+except ImportError:
+    genai = None
 
 # Load environment variables
 load_dotenv()
@@ -90,7 +94,7 @@ initial_capital = st.sidebar.number_input("Initial Capital ($)", value=100000.0)
 
 st.sidebar.divider()
 st.sidebar.header("✨ AI Features")
-gemini_api_key = os.getenv("GEMINI_API_KEY")
+gemini_api_key = os.getenv("GEMINI_API_KEY") if genai else None
 
 if gemini_api_key:
     st.sidebar.success("✅ Gemini AI Connected")
@@ -175,50 +179,50 @@ if st.session_state.backtest_ready:
             st.dataframe(trade_log, use_container_width=True)
 
     # --- GEMINI AI ANALYSIS (MOVED TO BOTTOM) ---
-    st.divider()
-    st.subheader("🔮 AI Performance Deep-Dive")
     if gemini_api_key:
+        st.divider()
+        st.subheader("🔮 AI Performance Deep-Dive")
         if st.button("🪄 Generate AI Strategy Insight", use_container_width=True):
             try:
                 genai.configure(api_key=gemini_api_key)
                 model = genai.GenerativeModel('gemini-2.0-flash') # State of the art Flash model
-                
+
                 win_loss_text = "OUTPERFORMED" if net_profit > mkt_net_profit else "UNDERPERFORMED"
                 diff_val = abs(net_profit - mkt_net_profit)
 
                 prompt = f"""
-                You are a professional quantitative trading assistant. 
+                You are a professional quantitative trading assistant.
                 Analyze these results:
                 - Stock: {t_sym}
                 - Selected Algorithm: {st.session_state.current_strategy}
                 - Observation: The strategy {win_loss_text} Buy & Hold by ${diff_val:,.2f}.
-                
+
                 Performance Metrics:
                 - Strategy Return: {met["Total Return"]}
                 - Market (Buy & Hold) Return: {met["Market Return"]}
                 - Sharpe Ratio: {met["Sharpe Ratio"]}
                 - Max Drawdown: {met["Max Drawdown"]}
-                
+
                 Please provide a report with these three sections:
-                
+
                 1. **Algorithm Mechanics**: Explain exactly how the {st.session_state.current_strategy} works in technical terms. Explain why its specific logic (crossovers, thresholds, or bands) triggered the results we see.
-                
+
                 2. **AI Performance Insight**: Provide a deep comparison of why this algorithm performed {win_loss_text} compared to a simple Buy & Hold strategy for {t_sym}. Was it the volatility, the trend strength, or the timing?
-                
+
                 3. **Quant Recommendation**: Based on the {met["Sharpe Ratio"]} Sharpe Ratio and {met["Max Drawdown"]} drawdown, is this algorithm viable for this stock? Suggest one specific parameter optimization.
-                
+
                 Format with clean markdown and use professional financial terminology.
                 """
-                
+
                 with st.spinner("Gemini 2.0 is analyzing the market performance..."):
                     response = model.generate_content(prompt)
                     st.session_state.ai_analysis = response.text
             except Exception as e:
                 st.error(f"AI Analysis Error: {str(e)}")
 
-    if st.session_state.get('ai_analysis'):
-        st.info("🧠 **AI Quant Insight**")
-        st.markdown(st.session_state.ai_analysis)
+        if st.session_state.get('ai_analysis'):
+            st.info("🧠 **AI Quant Insight**")
+            st.markdown(st.session_state.ai_analysis)
 
 # --- Strategy Explanations Section ---
 st.divider()
